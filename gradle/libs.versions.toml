@@ -1,0 +1,29 @@
+[versions]
+agp = "8.9.0"
+kotlin = "2.0.21"
+coreKtx = "1.15.0"
+lifecycleRuntimeKtx = "2.8.7"
+material = "1.12.0"
+mobileconsent = "0.2.4-alpha"
+retrofit = "2.11.0"
+gson = "2.11.0"
+converterGson = "2.11.0"
+converterScalars = "2.11.0"
+cryptoKtx = "1.1.0-alpha06"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+material = { module = "com.google.android.material:material", version.ref = "material" }
+mobileconsent = { module = "ai.secureprivacy.sdk:mobileConsent", version.ref = "mobileconsent" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+converterGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
+converterScalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converterScalars" }
+cryptoKtx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "cryptoKtx" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+

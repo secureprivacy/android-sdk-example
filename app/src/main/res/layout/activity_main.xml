@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <androidx.core.widget.ContentLoadingProgressBar
+        android:id="@+id/progressBar"
+        style="@style/Widget.AppCompat.ProgressBar"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_margin="16dp" />
+
+    <TextView
+        android:id="@+id/sdkStatusText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingBottom="8dp"
+        android:text="SDK Status: Initialising..."
+        android:textSize="18sp" />
+
+    <LinearLayout
+        android:id="@+id/llContent"
+        android:layout_width="match_parent"
+        android:layout_marginTop="24dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Application Type:"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rgApplicationType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbPrimaryApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:checked="true"
+                android:gravity="top"
+                android:text="Primary"
+                android:textColor="#808080" />
+
+            <RadioButton
+                android:id="@+id/rbSecondaryApp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:gravity="top"
+                android:text="Secondary app"
+                android:textColor="#808080" />
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/consentStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Consent Status: Unknown"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/checkConsentStatusBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Check Consent Status" />
+
+        <Button
+            android:id="@+id/showConsentBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Show Consent Banner" />
+
+        <TextView
+            android:id="@+id/packageStatusText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Please enter a package name"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/packageInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:hint="com.google.ads.mediation:facebook"
+            android:inputType="text"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/checkPackageStatusBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Check Package Status" />
+
+        <Button
+            android:id="@+id/clearSessionBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Clear session" />
+    </LinearLayout>
+
+</LinearLayout>
