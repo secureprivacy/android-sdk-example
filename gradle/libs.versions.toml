@@ -1,29 +1,29 @@
 [versions]
 agp = "8.9.0"
+firebaseAnalytics = "21.3.0"
 kotlin = "2.0.21"
+googleServices = "4.4.2"
 coreKtx = "1.15.0"
 lifecycleRuntimeKtx = "2.8.7"
 material = "1.12.0"
-mobileconsent = "0.2.4-alpha"
-retrofit = "2.11.0"
-gson = "2.11.0"
-converterGson = "2.11.0"
-converterScalars = "2.11.0"
-cryptoKtx = "1.1.0-alpha06"
+#playServicesAds = "23.0.0"
+spMobileConsent = "0.3.2"
+airbridge = "4.6.0"
+singular = "12.9.1"
+tenjin = "1.16.7"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+firebase-analytics = { module = "com.google.firebase:firebase-analytics", version.ref = "firebaseAnalytics" }
+#play-services-ads = { module = "com.google.android.gms:play-services-ads", version.ref = "playServicesAds" }
 material = { module = "com.google.android.material:material", version.ref = "material" }
-mobileconsent = { module = "ai.secureprivacy.sdk:mobileConsent", version.ref = "mobileconsent" }
-retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
-converterGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "converterGson" }
-converterScalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "converterScalars" }
-cryptoKtx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "cryptoKtx" }
+spMobileConsent = { module = "ai.secureprivacy.sdk:mobile-consent", version.ref = "spMobileConsent" }
+airbridge = { module = "io.airbridge:sdk-android", version.ref = "airbridge" }
+singular = { module = "com.singular.sdk:singular_sdk", version.ref = "singular" }
+tenjin = { module = "com.tenjin:android-sdk", version.ref = "tenjin" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }

@@ -1,22 +1,19 @@
 package ai.secureprivacy.example
 
+import ai.secureprivacy.example.additional_features.AdditionalFeaturesActivity
 import ai.secureprivacy.example.databinding.ActivityMainBinding
 import ai.secureprivacy.mobileconsent.consent_engine.SPConsentEngine
-import ai.secureprivacy.mobileconsent.data.dto.SPAuthKey
 import ai.secureprivacy.mobileconsent.data.dto.SPConsentEvent
 import ai.secureprivacy.mobileconsent.data.dto.SPDataMessage
 import ai.secureprivacy.mobileconsent.listeners.SPConsentEventListener
-import ai.secureprivacy.mobileconsent.ui.ConsentBanner
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.activity.ComponentActivity
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
  * MainActivity for demonstrating the usage of the Secure Privacy Mobile Consent SDK.
@@ -33,7 +30,7 @@ import kotlinx.coroutines.withContext
  *
  * @author Secure Privacy
  */
-class MainActivity : ComponentActivity() {
+class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "SecurePrivacy"
@@ -53,10 +50,11 @@ class MainActivity : ComponentActivity() {
      *
      * @return The primary or secondary application ID.
      */
-    private fun getSelectedApplicationId(): String = when (binding.rbPrimaryApp.id) {
-        binding.rbPrimaryApp.id -> Config.APPLICATION_ID
-        else -> Config.SECONDARY_APPLICATION_ID
-    }
+    private fun getSelectedApplicationId(): String? =
+        when (binding.rgApplicationType.checkedRadioButtonId) {
+            binding.rbPrimaryApp.id -> AppConfig.APPLICATION_ID
+            else -> AppConfig.SECONDARY_APPLICATION_ID
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,8 +80,11 @@ class MainActivity : ComponentActivity() {
         // Set up UI button actions
         binding.checkConsentStatusBtn.setOnClickListener { fetchConsentStatus() }
         binding.showConsentBtn.setOnClickListener { showConsentBanner() }
+        binding.showPreferenceCenterBtn.setOnClickListener { showPreferenceCenter() }
         binding.checkPackageStatusBtn.setOnClickListener { checkPackageStatus() }
+        binding.exploreAdditionalFeaturesBtn.setOnClickListener { exploreAdditionalFeatures() }
         binding.clearSessionBtn.setOnClickListener { clearSession() }
+
 
         // Observe SDK consent events
         SPConsentEngine.getConsentEventsData(CONSENT_REQUEST_CODE)
@@ -95,23 +96,22 @@ class MainActivity : ComponentActivity() {
 
         // Register primary consent event listener
         SPConsentEngine.addListener(
-            PRIMARY_CONSENT_EVENT_REQUEST_CODE,
-            object : SPConsentEventListener {
-                override val applicationId: String = Config.APPLICATION_ID
+            PRIMARY_CONSENT_EVENT_REQUEST_CODE, object : SPConsentEventListener {
+                override val applicationId: String = AppConfig.APPLICATION_ID
                 override fun onConsentAction(data: SPDataMessage<SPConsentEvent>) {
                     Log.d(TAG, "onConsentAction(${data})")
                 }
             })
-
-        // Register secondary consent event listener
-        SPConsentEngine.addListener(
-            SECONDARY_CONSENT_EVENT_REQUEST_CODE,
-            object : SPConsentEventListener {
-                override val applicationId: String = Config.APPLICATION_ID
-                override fun onConsentAction(data: SPDataMessage<SPConsentEvent>) {
-                    Log.d(TAG, "onConsentAction(${data})")
-                }
-            })
+        if (AppConfig.SECONDARY_APPLICATION_ID != null) {
+            // Register secondary consent event listener
+            SPConsentEngine.addListener(
+                SECONDARY_CONSENT_EVENT_REQUEST_CODE, object : SPConsentEventListener {
+                    override val applicationId: String = AppConfig.SECONDARY_APPLICATION_ID
+                    override fun onConsentAction(data: SPDataMessage<SPConsentEvent>) {
+                        Log.d(TAG, "onConsentAction(${data})")
+                    }
+                })
+        }
     }
 
     override fun onStop() {
@@ -121,29 +121,28 @@ class MainActivity : ComponentActivity() {
         super.onStop()
     }
 
+    private fun getSPApplication(): SPApplication {
+        return application as SPApplication
+    }
+
     /**
-     * Initializes the Secure Privacy SDK.
-     *
-     * This method runs asynchronously and updates the UI upon completion.
+     * Asynchronously initializes the Secure Privacy SDK and updates the UI upon completion.
      */
     private fun initialiseSDK() {
-        binding.llContent.visibility = View.GONE
         binding.progressBar.show()
-
-        lifecycleScope.launch(Dispatchers.IO) {
-            val result = SPConsentEngine.initialise(
-                this@MainActivity, SPAuthKey(
-                    applicationId = Config.APPLICATION_ID,
-                    secondaryApplicationId = Config.SECONDARY_APPLICATION_ID
-                )
-            )
-            withContext(Dispatchers.Main) {
+        binding.clearSessionBtn.visibility = View.GONE
+        binding.llContent.visibility = View.GONE
+        binding.sdkStatusText.text = HtmlCompat.fromHtml(
+            "<b>SDK Status</b>: Initialising...", HtmlCompat.FROM_HTML_MODE_COMPACT
+        )
+        getSPApplication().getSPConsentEngine().observe(this) { result ->
+            if (result != null) {
                 binding.progressBar.hide()
+                binding.clearSessionBtn.visibility = View.VISIBLE
                 if (result.code == 200 && result.data != null) {
-                    spConsentEngine = result.data!!
+                    spConsentEngine = result.data
                     binding.sdkStatusText.text = HtmlCompat.fromHtml(
-                        "<b>SDK Status</b>: Initialised!",
-                        HtmlCompat.FROM_HTML_MODE_COMPACT
+                        "<b>SDK Status</b>: Initialised!", HtmlCompat.FROM_HTML_MODE_COMPACT
                     )
                     binding.llContent.visibility = View.VISIBLE
                     fetchClientId()
@@ -162,36 +161,84 @@ class MainActivity : ComponentActivity() {
      * Fetches and updates the UI with the client ID for the selected application.
      */
     private fun fetchClientId() {
-        val result = spConsentEngine?.getClientId(getSelectedApplicationId())
+        val resultPrimary = spConsentEngine?.getClientId(AppConfig.APPLICATION_ID)
+        val primaryLocale = SPConsentEngine.getLocale(AppConfig.APPLICATION_ID).data ?: ""
         binding.rbPrimaryApp.text = HtmlCompat.fromHtml(
-            "<b>Primary</b>:<br>${result?.data ?: result?.msg}",
+            "<b>Primary</b>:<br>($primaryLocale) ${resultPrimary?.data ?: resultPrimary?.msg}",
             HtmlCompat.FROM_HTML_MODE_COMPACT
         )
-        binding.rbSecondaryApp.text = HtmlCompat.fromHtml(
-            "<b>Secondary</b>:<br>${result?.data ?: result?.msg}",
-            HtmlCompat.FROM_HTML_MODE_COMPACT
-        )
+        if (AppConfig.SECONDARY_APPLICATION_ID != null) {
+            val resultSecondary = spConsentEngine?.getClientId(AppConfig.SECONDARY_APPLICATION_ID)
+            val secondaryLocale = SPConsentEngine.getLocale(AppConfig.APPLICATION_ID).data ?: ""
+            binding.rbSecondaryApp.text = HtmlCompat.fromHtml(
+                "<b>Secondary</b>:<br>($secondaryLocale) ${resultSecondary?.data ?: resultSecondary?.msg}",
+                HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+        } else {
+            binding.rbSecondaryApp.visibility = View.GONE
+        }
     }
 
     /**
      * Fetches and updates the consent status for the selected application.
      */
     private fun fetchConsentStatus() {
-        val status = spConsentEngine?.getConsentStatus(getSelectedApplicationId())
+        val appId = getSelectedApplicationId() ?: return
+        val status = spConsentEngine?.getConsentStatus(appId)
         binding.consentStatusText.text = HtmlCompat.fromHtml(
             "<b>Consent Status</b>: ${
                 if (status?.code == 200) status.data else status?.msg
-            }",
-            HtmlCompat.FROM_HTML_MODE_COMPACT
+            }", HtmlCompat.FROM_HTML_MODE_COMPACT
         )
     }
 
     /**
      * Displays the appropriate consent banner based on the selected application type.
      */
-    private fun showConsentBanner() = when (binding.rbPrimaryApp.id) {
-        binding.rbPrimaryApp.id -> ConsentBanner.show(this)
-        else -> ConsentBanner.showSecondary(this)
+    private fun showConsentBanner() {
+        spConsentEngine?.let {
+            when (binding.rgApplicationType.checkedRadioButtonId) {
+                binding.rbPrimaryApp.id -> {
+                    val result = it.showConsentBanner(this)
+                    if (result.code != 200) {
+                        Toast.makeText(this, "$result", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                else -> {
+                    val result = it.showSecondaryBanner(this)
+                    if (result.code != 200) {
+                        Toast.makeText(this, "$result", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Displays the appropriate preference center based on the selected application type.
+     */
+    private fun showPreferenceCenter() {
+        spConsentEngine?.let {
+            when (binding.rgApplicationType.checkedRadioButtonId) {
+                binding.rbPrimaryApp.id -> {
+                    val result = it.showPreferenceCenter(this, AppConfig.APPLICATION_ID)
+                    if (result.code != 200) {
+                        Toast.makeText(this, "$result", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                else -> {
+                    if (AppConfig.SECONDARY_APPLICATION_ID != null) {
+                        val result =
+                            it.showPreferenceCenter(this, AppConfig.SECONDARY_APPLICATION_ID)
+                        if (result.code != 200) {
+                            Toast.makeText(this, "$result", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -205,21 +252,37 @@ class MainActivity : ComponentActivity() {
             binding.packageStatusText.text = "Please enter a package name"
             return
         }
+        val appId = getSelectedApplicationId() ?: return
+        val pkg = spConsentEngine?.getPackage(packageId, appId)?.data
 
-        val result = spConsentEngine?.getPackage(packageId, getSelectedApplicationId())
-        binding.packageStatusText.text = HtmlCompat.fromHtml(
-            "<b>Package status</b>: ${if (result?.data?.isEnabled == true) "Enabled" else "Disabled"}!",
-            HtmlCompat.FROM_HTML_MODE_COMPACT
-        )
+        pkg?.let {
+            // pkg is not null here, 'it' refers to pkg
+            binding.packageStatusText.text = HtmlCompat.fromHtml(
+                "<b>Package status</b>: ${if (it.isEnabled) "Enabled" else "Disabled"}!",
+                HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+        } ?: run {
+            // pkg is null here
+            binding.packageStatusText.text = HtmlCompat.fromHtml(
+                "<b>Package status</b>: Not found!",
+                HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+        }
+    }
+
+    /**
+     * Placeholder for exploring additional features.
+     * This can be expanded to include more functionalities as needed.
+     */
+    private fun exploreAdditionalFeatures() {
+        startActivity(Intent(this, AdditionalFeaturesActivity::class.java))
     }
 
     /**
      * Clears the local session data and re-initializes the SDK.
      */
     private fun clearSession() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            spConsentEngine?.clearSession()
-            withContext(Dispatchers.Main) { initialiseSDK() }
-        }
+        getSPApplication().resetSPSession()
+        initialiseSDK()
     }
 }

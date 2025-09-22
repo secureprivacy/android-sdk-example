@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -13,10 +14,9 @@ android {
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
-
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -41,11 +41,11 @@ android {
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.mobileconsent)
     implementation(libs.material)
-    implementation(libs.retrofit)
-    implementation(libs.gson)
-    implementation(libs.converterGson)
-    implementation(libs.converterScalars)
-    implementation(libs.cryptoKtx)
+    implementation(libs.spMobileConsent)
+    implementation(libs.firebase.analytics)
+//    implementation(libs.play.services.ads)
+    implementation(libs.airbridge)
+    implementation(libs.singular)
+    implementation(libs.tenjin)
 }

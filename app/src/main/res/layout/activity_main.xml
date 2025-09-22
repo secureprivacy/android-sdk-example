@@ -1,117 +1,174 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="@color/bgColor"
+    android:orientation="vertical">
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progressBar"
-        style="@style/Widget.AppCompat.ProgressBar"
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_margin="16dp" />
-
-    <TextView
-        android:id="@+id/sdkStatusText"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingBottom="8dp"
-        android:text="SDK Status: Initialising..."
-        android:textSize="18sp" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:padding="16dp">
 
-    <LinearLayout
-        android:id="@+id/llContent"
-        android:layout_width="match_parent"
-        android:layout_marginTop="24dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Application Type:"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <RadioGroup
-            android:id="@+id/rgApplicationType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:gravity="center"
             android:orientation="vertical">
 
-            <RadioButton
-                android:id="@+id/rbPrimaryApp"
-                android:layout_width="wrap_content"
+            <androidx.core.widget.ContentLoadingProgressBar
+                android:id="@+id/progressBar"
+                style="@style/Widget.AppCompat.ProgressBar"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_margin="16dp" />
+
+            <TextView
+                android:id="@+id/sdkStatusText"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:checked="true"
-                android:gravity="top"
-                android:text="Primary"
-                android:textColor="#808080" />
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:text="SDK Status: Initialising..."
+                android:textSize="18sp" />
 
-            <RadioButton
-                android:id="@+id/rbSecondaryApp"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:id="@+id/llContent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:gravity="top"
-                android:text="Secondary app"
-                android:textColor="#808080" />
-        </RadioGroup>
+                android:layout_marginTop="24dp"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/consentStatusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Consent Status: Unknown"
-            android:textSize="14sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Application Type:"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-        <Button
-            android:id="@+id/checkConsentStatusBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Check Consent Status" />
+                <RadioGroup
+                    android:id="@+id/rgApplicationType"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="vertical">
 
-        <Button
-            android:id="@+id/showConsentBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Show Consent Banner" />
+                    <RadioButton
+                        android:id="@+id/rbPrimaryApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:checked="true"
+                        android:gravity="top"
+                        android:text="Primary"
+                        android:textColor="#808080" />
 
-        <TextView
-            android:id="@+id/packageStatusText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Please enter a package name"
-            android:textSize="14sp" />
+                    <RadioButton
+                        android:id="@+id/rbSecondaryApp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:gravity="top"
+                        android:text="Secondary app"
+                        android:textColor="#808080" />
+                </RadioGroup>
 
-        <EditText
-            android:id="@+id/packageInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:hint="com.google.ads.mediation:facebook"
-            android:inputType="text"
-            android:textSize="14sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/checkPackageStatusBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Check Package Status" />
+                    <TextView
+                        android:id="@+id/consentStatusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Consent Status: Unknown"
+                        android:textSize="14sp" />
 
-        <Button
-            android:id="@+id/clearSessionBtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Clear session" />
-    </LinearLayout>
+                    <ImageButton
+                        android:id="@+id/checkConsentStatusBtn"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@android:color/transparent"
+                        android:foreground="?android:attr/actionBarItemBackground"
+                        android:paddingStart="4dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="4dp"
+                        android:paddingBottom="4dp"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_refresh"
+                        app:tint="@color/primary_700" />
+                </LinearLayout>
 
+                <Button
+                    android:id="@+id/showConsentBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_background"
+                    android:text="Show Consent Banner"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/showPreferenceCenterBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_background"
+                    android:text="Show Preference Center"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/packageStatusText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Please enter a package name"
+                    android:textSize="14sp" />
+
+                <EditText
+                    android:id="@+id/packageInput"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:hint="com.google.ads.mediation:facebook"
+                    android:inputType="text"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/checkPackageStatusBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_background"
+                    android:text="Check Package Status"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/exploreAdditionalFeaturesBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_background"
+                    android:text="Explore Additional Features"
+                    android:textColor="@android:color/white" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/clearSessionBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button_background"
+        android:text="Clear session"
+        android:textColor="@android:color/white" />
 </LinearLayout>

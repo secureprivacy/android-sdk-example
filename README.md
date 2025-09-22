@@ -21,7 +21,7 @@ Sign up for a **free trial** at [Secure Privacy](https://secureprivacy.ai) to ge
 
    ```gradle
    dependencies {
-       implementation("ai.secureprivacy.sdk:mobileConsent:0.2.4-alpha")
+       implementation("ai.secureprivacy.sdk:mobileConsent:0.2.9-beta")
    }
    ```
 
@@ -32,8 +32,8 @@ Sign up for a **free trial** at [Secure Privacy](https://secureprivacy.ai) to ge
 1. Clone this repository:
 
    ```sh
-   git clone https://github.com/secureprivacy/android-sdk-example.git
-   cd android-sdk-example
+   git clone https://github.com/secureprivacy-ai/sp-android-sdk-example.git
+   cd sp-android-sdk-example
    ```
 
 2. Open the project in Android Studio.
@@ -95,7 +95,6 @@ val consentStatus = spConsentEngine.getConsentStatus("YOUR_APPLICATION_ID")
 ```
 
 Possible consent states:
-
 - **Collected** – Consent has been obtained.
 - **Pending** – Consent is required.
 - **UpdateRequired** – Consent needs to be refreshed.
@@ -151,7 +150,7 @@ SPConsentEngine.getConsentEventsData(EVENT_CODE).observe(activity) { eventData -
 To clear local consent data:
 
 ```kotlin
-spConsentEngine.clearSession()
+SPConsentEngine.clearSession()
 ```
 
 This is useful for logout scenarios or resetting consent preferences.
@@ -165,6 +164,30 @@ val clientId = spConsentEngine.getClientId("YOUR_APPLICATION_ID")
 ```
 
 This can be used for backend tracking of consent states.
+
+### Get Country Code
+
+You can get the country code detected by the SDK using:
+```kotlin
+val countryCode = SPConsentEngine.getLocale(Config.APPLICATION_ID)
+```
+It returns a country code like US-CA or IN based on the user’s region.
+
+ℹ️ Make sure the SDK is initialized before calling this.
+
+### Google Consent Mode v2 Support
+If your app uses **Google Analytics for Firebase** and **Google Consent Mode**, you must define default consent values in your `AndroidManifest.xml` or through code **before collecting user consent**:
+```xml
+<meta-data android:name="google_analytics_default_allow_analytics_storage" android:value="false" />
+<meta-data android:name="google_analytics_default_allow_ad_storage" android:value="false" />
+<meta-data android:name="google_analytics_default_allow_ad_user_data" android:value="false" />
+<meta-data android:name="google_analytics_default_allow_ad_personalization_signals" android:value="false" />
+```
+**Note**: These values are required only if you have enabled **Google Consent Mode** for your app. Apps not using `Firebase Analytics` or `Google Ads` can skip this.
+
+These default values are **temporarily applied only until the Secure Privacy SDK syncs with its backend**. Based on the device's locale or regulatory region, an updated configuration is applied automatically, and consent values are later adjusted based on the user’s choice.
+
+👉 Refer to [Google's Consent Mode Guide](https://developers.google.com/tag-platform/security/guides/app-consent?consentmode=advanced&platform=android) for full details.
 
 ## Customization
 
@@ -180,8 +203,8 @@ Ensure the **Preference Center Activity** is declared in `AndroidManifest.xml`:
 
 ```xml
 <activity
-    android:name="ai.secureprivacy.mobileconsent.ui.preference_center.SPPreferenceCenter"
-    android:theme="@style/Theme.SecurePrivacyMobile"
+        android:name="ai.secureprivacy.mobileconsent.ui.preference_center.SPPreferenceCenter"
+        android:theme="@style/Theme.SecurePrivacyMobile"
 />
 ```
 

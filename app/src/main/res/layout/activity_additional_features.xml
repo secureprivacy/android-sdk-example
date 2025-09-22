@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bgColor"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/customAppBar"
+        layout="@layout/custom_app_bar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/firebaseAnalyticsBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="Firebase Analytics"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/airbridgeBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="Airbridge"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/singularBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="Singular"
+            android:textColor="@android:color/white" />
+
+        <Button
+            android:id="@+id/tenjinBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_background"
+            android:text="Tenjin"
+            android:textColor="@android:color/white" />
+    </LinearLayout>
+</LinearLayout>
